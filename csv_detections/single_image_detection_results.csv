@@ -1,0 +1,2 @@
+Image Name,Vehicle BBox,Car Score,License Plate BBox,License Plate Text,BBox Score,Text Score
+8.jpg,"['0.03', '615.01', '1800.00', '2625.13']",0.90,"['392.42', '1755.10', '1316.90', '2073.55']",LJT-758,0.74,0.88
