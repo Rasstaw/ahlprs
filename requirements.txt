@@ -4,4 +4,4 @@ opencv-python~=4.9.0.80
 easyocr~=1.7.1
 pandas~=2.2.2
 pillow~=10.3.0
-ultralytics~=8.2.18
+ultralytics~=8.2.10
