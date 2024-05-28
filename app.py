@@ -19,7 +19,7 @@ import git
 # Initialize and update git submodules
 subprocess.run([sys.executable, "-m", "pip", "install", "gitpython"])
 repo = git.Repo('.')
-repo.submodule_update(init=True, recursive=True)
+repo.submodule_update(init=True, recursive=False)
 
 from sort.sort import Sort
 
@@ -38,8 +38,6 @@ st.set_page_config(
     }
 )
 
-
-
 ############################################################################
 # setting file Paths
 ############################################################################
@@ -56,7 +54,7 @@ if not os.path.exists(folder_path):
 
 
 # instance of easyocr and vehicle classes
-lp_reader = easyocr.Reader(['en'], gpu=False)
+lp_reader = easyocr.Reader(['en'], gpu=True)
 vehicles = {2: "Car", 3: "Motorbike", 5: "Bus", 7: "Truck"}
 
 LICENSE_PLATE_DETECTION_MODEL_DIR = './models/license_plate_detector.pt'
