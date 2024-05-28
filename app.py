@@ -1,3 +1,5 @@
+import subprocess
+import sys
 import tempfile
 import streamlit as st
 import numpy as np
@@ -8,11 +10,18 @@ import pandas as pd
 import uuid
 import os
 import csv
-from sort.sort import Sort
 from util import get_car, read_lp, write_csv
 from scipy.interpolate import interp1d
 import cv2
 from visualize import visualize  # Import the visualize function
+import git
+
+# Initialize and update git submodules
+subprocess.run([sys.executable, "-m", "pip", "install", "gitpython"])
+repo = git.Repo('.')
+repo.submodule_update(init=True, recursive=True)
+
+from sort.sort import Sort
 
 
 # App configuration
@@ -28,6 +37,8 @@ st.set_page_config(
                  "vehicle License plate detection and recognition streamlit web application"
     }
 )
+
+
 
 ############################################################################
 # setting file Paths
