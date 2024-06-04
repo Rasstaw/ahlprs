@@ -345,18 +345,6 @@ def extract_lp(lp_crop, img):
     )
 
     st.text("")
-    st.sidebar.image(lp_crop,
-                     caption='cropped license plate',
-                     use_column_width=True)
-    st.sidebar.image(lp_crop_gray,
-                     caption='cropped and gray license plate ',
-                     use_column_width=True)
-    st.sidebar.image(lp_crop_gray_de_noised,
-                     caption='cropped, gray and de_noised license plate',
-                     use_column_width=True)
-    st.sidebar.image(lp_crop_gray_de_noised_thresh,
-                     caption='cropped, gray, de_noised and threshold license plate',
-                     use_column_width=True)
     st.sidebar.image(lp_crop_gray_de_noised_thresh_inv,
                      caption='cropped, gray, de_noised, threshold and inverted license plate',
                      use_column_width=True)
