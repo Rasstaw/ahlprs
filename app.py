@@ -63,9 +63,9 @@ COCO_MODEL_DIR = "./models/yolov8n.pt"
 #########################################################################
 # Correction map for common OCR mis_recognitions
 ##########################################################################
-dict_char_to_int = {'O': '0', 'I': '1', 'J': '3', 'A': '4', 'S': '5', 'B': '8', 'G': '9'}
+dict_char_to_int = {'O': '0', 'I': '1', 'J': '3', 'A': '4', 'S': '5', 'Z': '7', 'B': '8', 'G': '9'}
 
-dict_int_to_char = {'0': 'O', '1': 'I', '3': 'J', '4': 'A', '5': 'S', '8': 'B', '9': 'G'}
+dict_int_to_char = {'0': 'O', '1': 'I', '3': 'J', '4': 'A', '5': 'S', '7': 'Z', '8': 'B', '9': 'G'}
 
 correction_map = {
     'L': '4', 'O': '0', 'I': '1', 'Z': '2', 'S': '5', 'B': '8', 'G': '9', 'J': '3'
@@ -334,21 +334,41 @@ def extract_lp(lp_crop, img):
     lp_crop_gray = cv2.cvtColor(lp_crop, cv2.COLOR_BGR2GRAY)
     # Apply de_noising
     lp_crop_gray_de_noised = cv2.fastNlMeansDenoising(lp_crop_gray, None, 30, 7, 21)
+
     # Apply adaptive thresholding
-    lp_crop_gray_de_noised_hist_equalised_thresh = cv2.adaptiveThreshold(
+    lp_crop_gray_de_noised_thresh_inv = cv2.adaptiveThreshold(
         lp_crop_gray_de_noised, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2
     )
+
+    lp_crop_gray_de_noised_thresh = cv2.adaptiveThreshold(
+        lp_crop_gray_de_noised, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
+    )
+
     st.text("")
-    st.sidebar.image(lp_crop_gray_de_noised_hist_equalised_thresh,
-                     caption='gray license plate cropped, de_noised and adaptive threshold applied',
+    st.sidebar.image(lp_crop,
+                     caption='cropped license plate',
+                     use_column_width=True)
+    st.sidebar.image(lp_crop_gray,
+                     caption='cropped and gray license plate ',
+                     use_column_width=True)
+    st.sidebar.image(lp_crop_gray_de_noised,
+                     caption='cropped, gray and de_noised license plate',
+                     use_column_width=True)
+    st.sidebar.image(lp_crop_gray_de_noised_thresh,
+                     caption='cropped, gray, de_noised and threshold license plate',
+                     use_column_width=True)
+    st.sidebar.image(lp_crop_gray_de_noised_thresh_inv,
+                     caption='cropped, gray, de_noised, threshold and inverted license plate',
                      use_column_width=True)
 
+    # recognitions = lp_reader.readtext(lp_crop_gray_de_noised)
     recognitions = lp_reader.readtext(lp_crop_gray_de_noised)
+
     if not recognitions:
         return None, None
 
-    rectangle_size = (lp_crop_gray_de_noised_hist_equalised_thresh.shape[0] *
-                      lp_crop_gray_de_noised_hist_equalised_thresh.shape[1])
+    rectangle_size = (lp_crop_gray_de_noised.shape[0] *
+                      lp_crop_gray_de_noised.shape[1])
     plate = []
 
     for recognition in recognitions:
@@ -621,9 +641,9 @@ def main():
             st.text("Your uploaded Images are displayed on the sidebar:")
             st.sidebar.header("Uploaded files")
 
-            for uploaded_file in uploaded_files:
-                st.sidebar.image(uploaded_file, caption=uploaded_file.name, use_column_width=True)
-                st.sidebar.write("--------")
+            # for uploaded_file in uploaded_files:
+                # st.sidebar.image(uploaded_file, caption=uploaded_file.name, use_column_width=True)
+                # st.sidebar.write("--------")
 
             if st.button("Apply Recognitions"):
                 all_results = {}
@@ -638,8 +658,8 @@ def main():
                         predictions = model_prediction(image)
                         if len(predictions) == 4:
                             img_wth_box, licenses_texts, lp_crops_total, results = predictions
-                            st.sidebar.image(img_wth_box, caption=f"detected vehicles and License plates on image:"
-                                                                  f" {file_name}", use_column_width=True)
+                            # st.sidebar.image(img_wth_box, caption=f"detected vehicles and License plates on image:"
+                                                                  # f" {file_name}", use_column_width=True)
 
                             if licenses_texts:
                                 all_results[file_name] = results
