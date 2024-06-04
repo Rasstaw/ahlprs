@@ -3,6 +3,6 @@ libglib2.0-0
 libsm6
 libxrender1
 libxext6
-filterpy==1.4.5
+filterpy
 scikit-image==0.17.2
-lap==0.4.0
+lap
